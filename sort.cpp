@@ -407,7 +407,6 @@ void qSort
     int height
     ) 
 {
-    E* const olow = low;
     // Tail call loop.
     for(uint32_t x = high - low;;) 
     {
@@ -540,11 +539,18 @@ void qSort
                h == *mid || 
                h == *sr) 
             {
+                E p = *low;
                 E* l = low,
                  * k = low;
-                for(; k <= high; ++k)
-                    if(*k == h)
-                        swap(l++, k);
+                while(k < high)
+                {
+                    *k++ = *l;
+                    *l = *k;
+                    l += (*l == h);
+                }
+                *k = *l;
+                *l = p;
+                l += (p == h);
                 low = l;
                 if(low >= high)
                     return;
