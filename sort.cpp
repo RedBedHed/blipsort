@@ -539,9 +539,16 @@ void qSort
                h == *mid || 
                h == *sr) 
             {
-                E p = *low;
-                E* l = low,
-                 * k = low;
+                
+                E* l = low - 1;
+                E* g = high + 1;
+
+                // skip over data
+                // in place.
+                while(*++l == h);
+                while(*--g > h);
+                
+                E * k = l, p = *l;
                 while(k < high)
                 {
                     *k++ = *l;
@@ -572,10 +579,10 @@ void qSort
         // skip over data
         // in place.
         while(*++l < p);
-        if(leftmost)
-            while(*--k >= p && l < k);
+        if(!leftmost)
+            while(*--k >= p);
         else 
-        while(*--k >= p);
+        while(*--k >= p && l < k);
 
         // Bring left end inside.
         // Left end will be
