@@ -591,11 +591,11 @@ void qSort
             *l = *g;
             l += (*l < p);
         }
-        *g = *l; *l = p; g = l;
+        *g = *l; *l = p;
 
         // Skip the middle part.
+        g = l + (g < high);
         l -= (l > low );
-        g += (g < high);
 
         // Cheaply calculate an
         // eigth of the interval.
