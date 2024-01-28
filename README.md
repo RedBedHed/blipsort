@@ -18,9 +18,7 @@ A highly-optimized (and tiny) Introsort variant that draws from pdqsort, java, a
 The decades-old partitioning algorithm recently made a resurgence when researchers discovered ways remove the inner condition. Orson Peter's method&mdash; which he published on his blog a little under two months ago&mdash; is the fastest yet. It employs a gap in the data to move elements twice per iteration rather than swapping them (three moves).
 
 ### Pivot Selectivity
-The sort carefully selects the middlemost pivot from a set of five sorted candidates. 
-We found that a pivot retention strategy that considers the three middlemost candidates worked
-best.
+The sort carefully selects the middlemost pivot from a set of five sorted candidates. These candidates allow us to determine whether the data in the current interval is approximately descending and inform our "partition left" strategy.
 
 ### Introsort
 The sort is introspective, switching to a guaranteed nlog(n) sort if the sort becomes quadratic. Like PDQsort, the sort switches to Heapsort for an interval after log(n) "bad" partitions&mdash; partitions that are significantly unbalanced.
