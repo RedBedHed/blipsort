@@ -15,7 +15,7 @@ A highly-optimized (and tiny) Introsort variant that draws from pdqsort, java, a
 ## Techniques
 
 ### Branchless Lomuto
-The decades-old partitioning algorithm recently made a resurgence when researchers discovered ways remove the inner condition. Orson Peter's method&mdash; which he published on his blog a little under two months ago&mdash; is the fastest yet. It employs a gap in the data to move elements twice per iteration rather than swapping them (six moves).
+The decades-old partitioning algorithm recently made a resurgence when researchers discovered ways remove the inner condition. Orson Peter's method&mdash; which he published on his blog a little under two months ago&mdash; is the fastest yet. It employs a gap in the data to move elements twice per iteration rather than swapping them (three moves).
 
 ### Pivot Selectivity
 The sort carefully selects the middlemost pivot from a set of five sorted candidates. 
