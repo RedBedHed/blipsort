@@ -243,9 +243,10 @@ inline void hSort
  * @authors Orson Peters
  * @authors Ellie Moore
  * @tparam E the element type
+ * @tparam Are we sorting optimistically?
+ * @param leftmost whether this is the leftmost part
  * @param low a pointer to the leftmost index
  * @param high a pointer to the rightmost index
- * @param isLeftmost whether or not this subarray is a
  * left-most partition.
  */
 template<typename E, bool Bail = true>
@@ -283,7 +284,6 @@ inline bool iSort
     } 
     else 
     {
-        // std::cout << "hi";
         // Pair insertion sort.
         // Skip elements that are
         // in ascending order.
@@ -386,8 +386,8 @@ inline void scramble
  * @authors Orson Peters
  * @authors Ellie Moore
  * @tparam E the element type
- * @tparam Leftmost whether we are considering
- * a leftmost partition.
+ * @tparam Root whether this is the sort root
+ * @param leftmost whether this is the leftmost part
  * @param low a pointer to the leftmost index
  * @param high a pointer to the rightmost index
  * @param height the distance of the current sort
