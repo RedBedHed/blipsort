@@ -23,7 +23,7 @@ The decades-old partitioning algorithm recently made a resurgence when researche
 The sort carefully selects the middlemost pivot from a set of five sorted candidates. These candidates allow us to determine whether the data in the current interval is approximately descending and inform our "partition left" strategy.
 
 ### Introspection
-The sort is introspective, switching to a guaranteed nlog(n) sort if the sort becomes quadratic. Like PDQsort, the sort switches to Heapsort for an interval after log(n) "bad" partitions&mdash; partitions that are significantly unbalanced.
+The sort is introspective, switching to a guaranteed nlog(n) sort if the sort becomes quadratic. Like PDQsort, the sort switches to Heapsort after log(n) "bad" partitions&mdash; partitions that are significantly unbalanced.
 
 ### Insertion Sort
 The sort uses Insertion sort on small intervals where asymptotic complexity matters less and instruction overhead matters more. The sort employs Java's Pair Insertion sort on every interval except the leftmost. Pair insertion sort inserts two elements at a time 
