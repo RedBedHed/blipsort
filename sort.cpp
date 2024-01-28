@@ -642,7 +642,7 @@ void qSort
         // Avoid running past low
         // end. place a stopper in
         // the gap.
-        *l = p + 1;
+        *l = p - 1;
 
         // skip over data
         // in place.
