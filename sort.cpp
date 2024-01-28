@@ -526,6 +526,29 @@ void qSort
                 }
             }
         }
+
+        // If the candidates are
+        // descending, then the
+        // interval is likely to
+        // be descending somewhat.
+        // rotate the entire interval
+        // around the midpoint.
+        // Don't worry about the
+        // even size case. One
+        // out-of-order element
+        // is no big deal for
+        // branchless Lomuto.
+        else
+        {
+            E* u = low;
+            E* q = high;
+            while(u < mid)
+            {
+                E e = *u;
+                *u++ = *q;
+                *q-- = e;
+            }
+        }
         
         // If any middle candidate 
         // pivot is equal to the 
@@ -602,24 +625,6 @@ void qSort
         // respectively.
         E *l = low - 1, 
           *k = high + 1;
-
-        // If we are confident
-        // that the interval is
-        // descending, rotate it 
-        // to ascending. Don't
-        // worry about the even
-        // size case.
-        if(descending)
-        {
-            E* u = low;
-            E* q = high;
-            while(u < mid)
-            {
-                E e = *u;
-                *u++ = *q;
-                *q-- = e;
-            }
-        }
 
         // Assign midpoint to pivot
         // variable.
