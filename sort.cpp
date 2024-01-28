@@ -606,7 +606,9 @@ void qSort
         // If we are confident
         // that the interval is
         // descending, rotate it 
-        // to ascending.
+        // to ascending. Don't
+        // worry about the even
+        // size case.
         if(descending)
         {
             E* u = low;
