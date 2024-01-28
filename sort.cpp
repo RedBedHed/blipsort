@@ -632,16 +632,22 @@ void qSort
         // skip over data
         // in place.
         while(*++l < p);
-        if(l != low)
-            while(*--k >= p);
-        else 
-        while(*--k >= p && l < k);
 
         // Bring left end inside.
         // Left end will be
         // replaced and pivot will
         // be swapped back later.
         *mid = *l;
+
+        // Avoid running past low
+        // end. place a stopper in
+        // the gap.
+        *l = p - 1;
+
+        // skip over data
+        // in place.
+        while(*--k >= p);
+
         E* g = l;
 
         /**
