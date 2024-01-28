@@ -456,17 +456,14 @@ void qSort
         if(*low  < *cl) cl = low;
         if(*high > *cr) cr = high;
 
-        bool descending =
-            *cl > *sl &&
-            *sl > *mid &&
-            *mid > *sr &&
-            *sr > *cr;
-
         // If the candidates aren't
         // descending...
         // Insertion sort all five
         // candidate pivots in-place.
-        if(!descending)
+        if(*cl  <= *sl  ||
+           *sl  <= *mid ||
+           *mid <= *sr  ||
+           *sr  <= *cr)
         {
             if (*sl < *cl) 
             {
