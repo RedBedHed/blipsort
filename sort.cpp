@@ -14,7 +14,7 @@ namespace
 constexpr uint64_t DeBruijn64 =
     0x03F79D71B4CB0A89L;
 
-/*
+/**
  * The DeBruijn map from key to integer
  * square index.
  */
