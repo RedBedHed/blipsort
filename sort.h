@@ -10,7 +10,7 @@
 
 namespace Arrays {
     template<typename E>
-    void uSort(E*, uint32_t);
+    void blipsort(E*, uint32_t);
 }
 
 #endif //BMSRS_SORT_H

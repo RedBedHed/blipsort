@@ -572,9 +572,12 @@ void qSort
                 E* g = high + 1;
 
                 // skip over data
-                // in place.
-                while(*++l == h);
+                // in place.         
                 while(*--g > h);
+                if(Root)
+                    while(*++l == h);
+                else 
+                while(*++l == h && l < g);
                 
         /**
          * Partition left by branchless Lomuto scheme
@@ -596,7 +599,7 @@ void qSort
          * low                            l                           high
          */
                 E * k = l, p = *l;
-                while(k < high)
+                while(k < g)
                 {
                     *k++ = *l;
                     *l = *k;
@@ -673,7 +676,7 @@ void qSort
 
         // Skip the middle part.
         g = l + (l < high);
-        l -= (l > low );
+        l -= (l > low);
 
         // Cheaply calculate an
         // eigth of the interval.
