@@ -460,51 +460,38 @@ void qSort
         if(*low  < *cl) cl = low;
         if(*high > *cr) cr = high;
 
-        // Insertion sort all five
-        // candidate pivots in-place.
-        if (*sl < *cl) 
-        {
-            E e = *sl;
-            *sl = *cl;
-            *cl =   e;
-        }
+        bool swapped_all =
+            *cl > *sl &&
+            *sl > *mid &&
+            *mid > *sr &&
+            *sr > *cr;
 
-        if (*mid < *sl) 
+        if(!swapped_all)
         {
-            E e  = *mid;
-            *mid =  *sl;
-            *sl  =    e;
-            if (e < *cl) 
+            // Insertion sort all five
+            // candidate pivots in-place.
+            if (*sl < *cl) 
             {
+                E e = *sl;
                 *sl = *cl;
                 *cl =   e;
             }
-        }
 
-        if (*sr < *mid) 
-        {
-            E e  =  *sr;
-            *sr  = *mid;
-            *mid =    e;
-            if (e < *sl) 
+            if (*mid < *sl) 
             {
-                *mid = *sl;
-                *sl  =   e;
+                E e  = *mid;
+                *mid =  *sl;
+                *sl  =    e;
                 if (e < *cl) 
                 {
                     *sl = *cl;
                     *cl =   e;
                 }
             }
-        }
 
-        if (*cr < *sr) 
-        {
-            E e = *cr;
-            *cr = *sr;
-            *sr =   e;
-            if (e < *mid) 
+            if (*sr < *mid) 
             {
+                E e  =  *sr;
                 *sr  = *mid;
                 *mid =    e;
                 if (e < *sl) 
@@ -515,6 +502,28 @@ void qSort
                     {
                         *sl = *cl;
                         *cl =   e;
+                    }
+                }
+            }
+
+            if (*cr < *sr) 
+            {
+                E e = *cr;
+                *cr = *sr;
+                *sr =   e;
+                if (e < *mid) 
+                {
+                    *sr  = *mid;
+                    *mid =    e;
+                    if (e < *sl) 
+                    {
+                        *mid = *sl;
+                        *sl  =   e;
+                        if (e < *cl) 
+                        {
+                            *sl = *cl;
+                            *cl =   e;
+                        }
                     }
                 }
             }
@@ -566,15 +575,27 @@ void qSort
             }
         }
 
-        // Assign midpoint to pivot
-        // variable.
-        const E p = *mid;
-
         // Initialize l and g.
         // "less" and "great"
         // respectively.
         E *l = low - 1, 
           *k = high + 1;
+
+        if(swapped_all)
+        {
+            E* u = low;
+            E* q = high;
+            while(u < mid)
+            {
+                E e = *u;
+                *u++ = *q;
+                *q-- = e;
+            }
+        }
+
+        // Assign midpoint to pivot
+        // variable.
+        const E p = *mid;
 
         // skip over data
         // in place.
@@ -601,7 +622,7 @@ void qSort
         *g = *l; *l = p;
 
         // Skip the middle part.
-        g = l + (g < high);
+        g = l + (l < high);
         l -= (l > low );
 
         // Cheaply calculate an
