@@ -553,8 +553,7 @@ void qSort
         // If any middle candidate 
         // pivot is equal to the 
         // rightmost element of the 
-        // partition to the left, 
-        // we have "retained" the pivot.
+        // partition to the left,
         // swap pivot duplicates to 
         // the side and sort the 
         // remainder. This is an
@@ -562,8 +561,8 @@ void qSort
         // partitioning.
         if(!leftmost)
         {
-            // Check if we retained
-            // the pivot to the left.
+            // Check the pivot to 
+            // the left.
             E h = *(low - 1);
             if(h == *sl  || 
                h == *mid || 
