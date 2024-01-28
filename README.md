@@ -20,7 +20,7 @@ The decades-old partitioning algorithm recently made a resurgence when researche
 ### Pivot Selectivity
 The sort carefully selects the middlemost pivot from a set of five sorted candidates. These candidates allow us to determine whether the data in the current interval is approximately descending and inform our "partition left" strategy.
 
-### Introsort
+### Introspection
 The sort is introspective, switching to a guaranteed nlog(n) sort if the sort becomes quadratic. Like PDQsort, the sort switches to Heapsort for an interval after log(n) "bad" partitions&mdash; partitions that are significantly unbalanced.
 
 ### Insertion Sort
