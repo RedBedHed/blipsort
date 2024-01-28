@@ -15,9 +15,9 @@ constexpr uint64_t DeBruijn64 =
     0x03F79D71B4CB0A89L;
 
 /*
-    * The DeBruijn map from key to integer
-    * square index.
-    */
+ * The DeBruijn map from key to integer
+ * square index.
+ */
 constexpr uint8_t DeBruijnTableF[] = 
 {
     0,  47,  1, 56, 48, 27,  2, 60,
