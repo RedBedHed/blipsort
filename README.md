@@ -6,6 +6,12 @@ A highly-optimized (and tiny) Introsort variant that draws from pdqsort, java, a
 
 ![Speed](https://github.com/RedBedHed/BLPDQsort/blob/main/blipsort_speed.png)
 
+## Complexity
+
+| Best | Average | Worst | Memory |
+|------|---------|-------|--------|
+| n    | n log n | n log n | log n |
+
 ## Techniques
 
 ### Branchless Lomuto
