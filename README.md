@@ -1,6 +1,6 @@
 # *Branchless-Lomuto in Pattern-Defeating Quicksort (Blipsort)*
  
-A highly-optimized (and tiny) Introsort variant that draws from pdqsort, Java, and Orson Peter's branchless Lomuto partitioning.
+A highly-optimized (and tiny) Introsort variant that draws from PDQsort, Java, and Orson Peter's branchless Lomuto partitioning.
 
 ## Speed
 
@@ -30,13 +30,13 @@ Blipsort uses Insertion sort on small intervals where asymptotic complexity matt
 and doesn't need to perform a lower bound check, making it slightly faster than normal insertion sort in the context of quicksort.
 
 ### Pivot Retention
-Similar to PDQSort, if any of the three middlemost candidate pivots is equal to the rightmost element of the partition at left, Blipsort moves equal elements to the left with branchless Lomuto and continues to the right, solving the dutch-flag problem and yeilding linear time on data comprised of equal elements.
+Similar to PDQsort, if any of the three middlemost candidate pivots is equal to the rightmost element of the partition at left, Blipsort moves equal elements to the left with branchless Lomuto and continues to the right, solving the dutch-flag problem and yeilding linear time on data comprised of equal elements.
 
 ### Optimism
-Similar to PDQSort, if the partition is "good" (not highly unbalanced), Blipsort switches to insertion sort. If the Insertion sort makes more than a constant number of moves, Blipsort bails and resumes quicksort. This allows Blipsort to achieve linear time on already-sorted data.
+Similar to PDQsort, if the partition is "good" (not highly unbalanced), Blipsort switches to insertion sort. If the Insertion sort makes more than a constant number of moves, Blipsort bails and resumes quicksort. This allows Blipsort to achieve linear time on already-sorted data.
 
 ### Breaking Patterns
-Like PDQSort, if the partition is bad, Blipsort scrambles some elements to break up patterns.
+Like PDQsort, if the partition is bad, Blipsort scrambles some elements to break up patterns.
 
 ### Rotation
 When all of the candidate pivots are descending, it is very likely that the interval is descending as well. Lomuto partitioning slows significantly on descending data. Therefore, Blipsort neglects to sort descending candidates and instead swap-rotates the entire interval before partitioning.
