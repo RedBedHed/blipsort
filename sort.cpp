@@ -460,16 +460,18 @@ void qSort
         if(*low  < *cl) cl = low;
         if(*high > *cr) cr = high;
 
-        bool swapped_all =
+        bool descending =
             *cl > *sl &&
             *sl > *mid &&
             *mid > *sr &&
             *sr > *cr;
 
-        if(!swapped_all)
+        // If the candidates aren't
+        // descending...
+        // Insertion sort all five
+        // candidate pivots in-place.
+        if(!descending)
         {
-            // Insertion sort all five
-            // candidate pivots in-place.
             if (*sl < *cl) 
             {
                 E e = *sl;
@@ -548,7 +550,6 @@ void qSort
                h == *mid || 
                h == *sr) 
             {
-                
                 E* l = low - 1;
                 E* g = high + 1;
 
@@ -557,6 +558,25 @@ void qSort
                 while(*++l == h);
                 while(*--g > h);
                 
+                /**
+                 * Partition left by branchless Lomuto scheme
+                 * 
+                 * During partitioning:
+                 * 
+                 * +-------------------------------------------------------------+
+                 * |  ... == p  |  ... > p  | * |     ... ? ...      |  ... > p  |
+                 * +-------------------------------------------------------------+
+                 * ^            ^           ^                        ^           ^
+                 * low          l           k                        g         high
+                 * 
+                 * After partitioning:
+                 * 
+                 * +-------------------------------------------------------------+
+                 * |           ... == p           |            p > ...           |
+                 * +-------------------------------------------------------------+
+                 * ^                              ^                              ^
+                 * low                            l                           high
+                 */
                 E * k = l, p = *l;
                 while(k < high)
                 {
@@ -568,8 +588,14 @@ void qSort
                 *l = p;
                 l += (p == h);
                 low = l;
+
+                // If we have nothing 
+                // left to sort, return.
                 if(low >= high)
                     return;
+
+                // Calculate the interval 
+                // width and loop.
                 x = high - low;
                 continue;
             }
@@ -581,7 +607,11 @@ void qSort
         E *l = low - 1, 
           *k = high + 1;
 
-        if(swapped_all)
+        // If we are confident
+        // that the interval is
+        // descending, rotate it 
+        // to ascending.
+        if(descending)
         {
             E* u = low;
             E* q = high;
@@ -610,9 +640,27 @@ void qSort
         // replaced and pivot will
         // be swapped back later.
         *mid = *l;
-
         E* g = l;
 
+        /**
+         * Partition by branchless Lomuto scheme
+         * 
+         * During partitioning:
+         * 
+         * +-------------------------------------------------------------+
+         * |  ... < p  |  ... >= p  | * |     ... ? ...     |  ... >= p  |
+         * +-------------------------------------------------------------+
+         * ^           ^            ^                       ^            ^
+         * low         l            g                       k         high
+         * 
+         * After partitioning:
+         * 
+         * +-------------------------------------------------------------+
+         * |           ... < p            |            p >= ...          |
+         * +-------------------------------------------------------------+
+         * ^                              ^                              ^
+         * low                            l                           high
+         */
         while(g < k)
         {
             *g++ = *l;
