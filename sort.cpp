@@ -240,6 +240,7 @@ inline void hSort
  *
  * @authors Josh Bloch
  * @authors Jon Bently
+ * @authors Orson Peters
  * @authors Ellie Moore
  * @tparam E the element type
  * @param low a pointer to the leftmost index
@@ -373,20 +374,15 @@ inline void scramble
 
 /**
  * <b>
- *  <i>Introspective Multi-Pivot Quick Sort</i>
+ *  <i>Blipsort</i>
  * </b>
  *
  * <p>
  * See readme (too lazy to type this right now)
  * </p>
  *
- * @authors Vladimir Yaroslavskiy
  * @authors Josh Bloch
  * @authors Jon Bently
- * @authors Shrinu Kushagra
- * @authors Alejandro Lopez-Ortiz
- * @authors J. Ian Munro
- * @authors Aurick Qiao
  * @authors Orson Peters
  * @authors Ellie Moore
  * @tparam E the element type
@@ -558,25 +554,25 @@ void qSort
                 while(*++l == h);
                 while(*--g > h);
                 
-                /**
-                 * Partition left by branchless Lomuto scheme
-                 * 
-                 * During partitioning:
-                 * 
-                 * +-------------------------------------------------------------+
-                 * |  ... == p  |  ... > p  | * |     ... ? ...      |  ... > p  |
-                 * +-------------------------------------------------------------+
-                 * ^            ^           ^                        ^           ^
-                 * low          l           k                        g         high
-                 * 
-                 * After partitioning:
-                 * 
-                 * +-------------------------------------------------------------+
-                 * |           ... == p           |            p > ...           |
-                 * +-------------------------------------------------------------+
-                 * ^                              ^                              ^
-                 * low                            l                           high
-                 */
+        /**
+         * Partition left by branchless Lomuto scheme
+         * 
+         * During partitioning:
+         * 
+         * +-------------------------------------------------------------+
+         * |  ... == p  |  ... > p  | * |     ... ? ...      |  ... > p  |
+         * +-------------------------------------------------------------+
+         * ^            ^           ^                        ^           ^
+         * low          l           k                        g         high
+         * 
+         * After partitioning:
+         * 
+         * +-------------------------------------------------------------+
+         * |           ... == p           |            p > ...           |
+         * +-------------------------------------------------------------+
+         * ^                              ^                              ^
+         * low                            l                           high
+         */
                 E * k = l, p = *l;
                 while(k < high)
                 {
@@ -746,7 +742,7 @@ void qSort
 namespace Arrays 
 {
     template <typename E>
-    inline void uSort
+    inline void blipsort
         (
         E* const a,
         const uint32_t cnt
@@ -763,11 +759,11 @@ namespace Arrays
     }
 
     template void
-    uSort<int64_t>(int64_t*, uint32_t);
+    blipsort<int64_t>(int64_t*, uint32_t);
     template void
-    uSort<int32_t>(int32_t*, uint32_t);
+    blipsort<int32_t>(int32_t*, uint32_t);
     template void
-    uSort<int16_t>(int16_t*, uint32_t);
+    blipsort<int16_t>(int16_t*, uint32_t);
     template void
-    uSort<int8_t>(int8_t*, uint32_t);
+    blipsort<int8_t>(int8_t*, uint32_t);
 }
