@@ -689,9 +689,7 @@ void qSort
         // balanced, try insertion sort.
         // If insertion sort runtime
         // trends higher than O(n), fall 
-        // back to quicksort. Idea from 
-        // Orson Peters for linear
-        // time on nearly sorted arrays.
+        // back to quicksort.
         if(ls >= _8th &&
            gs >= _8th) 
         {
