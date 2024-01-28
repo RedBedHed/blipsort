@@ -571,7 +571,7 @@ void qSort
                 // skip over data
                 // in place.         
                 while(*--g > h);
-                if(Root)
+                if(!Root)
                     while(*++l == h);
                 else 
                 while(*++l == h && l < g);
