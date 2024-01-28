@@ -38,7 +38,7 @@ Similar to PDQSort, if the partition is "good" (not highly unbalanced), the sort
 ### Breaking Patterns
 Like PDQSort, if the partition is bad, the sort scrambles some elements to break up patterns.
 
-### Descending Rotation
+### Rotation
 When all of the candidate pivots are descending, it is very likely that the interval is descending as well. Lomuto partitioning slows significantly on descending data. Therefore, we neglect to sort the candidates and swap-rotate the entire interval before partitioning.
 
 Sources:
