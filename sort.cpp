@@ -741,7 +741,7 @@ void qSort
             // insertion sort will
             // be unguarded.
             iSort
-            <E, false>(leftmost, low, high);
+            <E, false>(false, low, high);
             return;
         }
 
