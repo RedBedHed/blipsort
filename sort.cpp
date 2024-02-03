@@ -571,10 +571,11 @@ void qSort
                 // skip over data
                 // in place.         
                 while(*--g > h);
-                if(g != high)
-                    while(*++l == h);
-                else 
-                while(*++l == h && l < g);
+
+                E e = *g;
+                *g = h + 1;
+                while(*++l == h);
+                *g = e;
                 
         /**
          * Partition left by branchless Lomuto scheme
