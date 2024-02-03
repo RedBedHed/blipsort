@@ -678,7 +678,7 @@ void qSort
         }
         *g = *l; *l = p;
 
-        // Skip the middle part.
+        // Skip the pivot.
         g = l + (l < high);
         l -= (l > low);
 
