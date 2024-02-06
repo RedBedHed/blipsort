@@ -340,7 +340,6 @@ inline bool iSort
     return true;
 }
 
-
 /**
  * Scramble a few elements to help
  * break patterns.
@@ -649,6 +648,13 @@ void qSort
         // in place.
         while(*--k >= p);
 
+        // Will we do a significant 
+        // amount of work during 
+        // partitioning?
+        bool work = 
+        ((l - low) + (high - k)) 
+            < (x >> 1U);
+
         E* g = l;
 
         /**
@@ -700,6 +706,7 @@ void qSort
         if(ls >= _8th &&
            gs >= _8th) 
         {
+            if(work) goto l1;
             if(!iSort(leftmost, low, l)) 
                 goto l1;
             if(!iSort(false, g, high))
