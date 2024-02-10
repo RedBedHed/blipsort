@@ -452,18 +452,24 @@ void qSort
         // to candidate pivots.
         E * cl = low  + _6th;
         E * cr = high - _6th;
-        if(*low  < *cl) cl = low;
-        if(*high > *cr) cr = high;
 
         // If the candidates aren't
         // descending...
         // Insertion sort all five
         // candidate pivots in-place.
-        if(*cl  <= *sl  ||
-           *sl  <= *mid ||
-           *mid <= *sr  ||
-           *sr  <= *cr)
+        if(*low <= *cl  | 
+           *cl  <= *sl  |
+           *sl  <= *mid |
+           *mid <= *sr  |
+           *sr  <= *cr  |
+           *cr  <= *high)
         {
+            
+            if(*low  < *cl) 
+                cl = low;
+            if(*high > *cr) 
+                cr = high;
+
             if (*sl < *cl) 
             {
                 E e = *sl;
