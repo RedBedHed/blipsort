@@ -429,6 +429,7 @@ void qSort
 
         // Heap sort when the runtime
         // trends towards quadratic.
+        if constexpr (!Root)
         if(height < 0)
             return hSort(low, high);
 
@@ -625,9 +626,7 @@ void qSort
             }
         }
 
-        // Initialize l and g.
-        // "less" and "great"
-        // respectively.
+        // Initialize l and k.
         E *l = low - 1, 
           *k = high + 1;
 
@@ -661,6 +660,7 @@ void qSort
         ((l - low) + (high - k)) 
             < (x >> 1U);
 
+        // Initialize g.
         E* g = l;
 
         /**
@@ -758,6 +758,10 @@ void qSort
             <E, false>(false, low, high);
             return;
         }
+
+        if constexpr (Root)
+        if(height < 0)
+            return hSort(low, high);
 
         leftmost = false;
     }
