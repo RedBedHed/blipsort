@@ -427,7 +427,8 @@ void qSort
             return;
         }
 
-        // Heap sort when the runtime
+        // If this is not the root node, 
+        // heap sort when the runtime
         // trends towards quadratic.
         if constexpr (!Root)
         if(height < 0)
@@ -759,6 +760,9 @@ void qSort
             return;
         }
 
+        // If this is the root node, 
+        // heap sort when the runtime
+        // trends towards quadratic.
         if constexpr (Root)
         if(height < 0)
             return hSort(low, high);
