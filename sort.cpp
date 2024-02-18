@@ -229,7 +229,10 @@ inline void hSort
  * <p>
  * Classical ascending insertion sort packaged with a
  * "pairing" optimization to be used in the context of
- * Quick Sort.
+ * Quicksort.
+ * </p>
+ * 
+ * <p>
  * This optimization is used whenever the portion of
  * the array to be sorted is padded on the left by
  * a portion with lesser elements. The fact that all of
