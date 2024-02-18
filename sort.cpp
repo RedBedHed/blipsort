@@ -99,7 +99,6 @@ constexpr void swap
 }
 
 /**
- *
  * A generic "sift down" method (AKA max-heapify)
  *
  * @tparam E the element type
@@ -178,9 +177,11 @@ inline void siftDown
 }
 
 /**
- * <b>
+ * <h1>
+ *  <b>
  *  <i>Heap Sort</i>
- * </b>
+ *  </b>
+ * </h1>
  *
  * <p>
  * Classical heap sort that sorts the given range
@@ -219,11 +220,11 @@ inline void hSort
 }
 
 /**
- * <b>
- *  <i>
- * Insertion Sort
- *  </i>
- * </b>
+ * <h1>
+ *  <b>
+ *  <i>Insertion Sort</i>
+ *  </b>
+ * </h1>
  *
  * <p>
  * Classical ascending insertion sort packaged with a
@@ -372,12 +373,82 @@ inline void scramble
 }
 
 /**
- * <b>
+ * <h1>
+ *  <b>
  *  <i>Blipsort</i>
- * </b>
+ *  </b>
+ * </h1>
  *
+ * <h2>Branchless Lomuto</h2>
  * <p>
- * See readme (too lazy to type this right now)
+ * The decades-old partitioning algorithm recently 
+ * made a resurgence when researchers discovered 
+ * ways to remove the inner branch. Orson Peter's 
+ * method— which he published on his blog a little 
+ * under two months ago— is the fastest yet. It 
+ * employs a gap in the data to move elements 
+ * twice per iteration rather than swapping them 
+ * (three moves).
+ * </p>
+ * 
+ * <h2>Pivot Selectivity</h2>
+ * <p>
+ * Blipsort carefully selects the pivot from the 
+ * middle of five sorted candidates. These 
+ * candidates allow the sort to determine whether 
+ * the data in the current interval is approximately 
+ * descending and inform its "partition left" strategy.
+ * </p>
+ * 
+ * <h2>Insertion Sort</h2>
+ * <p>
+ * Blipsort uses Insertion sort on small intervals 
+ * where asymptotic complexity matters less and 
+ * instruction overhead matters more. Blipsort 
+ * employs Java's Pair Insertion sort on every 
+ * nterval except the leftmost. Pair insertion 
+ * sort inserts two elements at a time and doesn't 
+ * need to perform a lower bound check, making it 
+ * slightly faster than normal insertion sort in 
+ * the context of quicksort.
+ * </p>
+ * 
+ * <h2>Pivot Retention</h2>
+ * <p>
+ * Similar to PDQsort, if any of the three middlemost 
+ * candidate pivots is equal to the rightmost element 
+ * of the partition at left, Blipsort moves equal 
+ * elements to the left with branchless Lomuto and 
+ * continues to the right, solving the dutch-flag 
+ * problem and yeilding linear time on data comprised 
+ * of equal elements.
+ * </p> 
+ * 
+ * <h2>Optimism</h2>
+ * <p>
+ * Similar to PDQsort, if the partition is "good" 
+ * (not highly unbalanced), Blipsort switches to 
+ * insertion sort. If the Insertion sort makes more 
+ * than a constant number of moves, Blipsort bails 
+ * and resumes quicksort. This allows Blipsort to 
+ * achieve linear time on already-sorted data.
+ * </p>
+ * 
+ * <h2>Breaking Patterns</h2>
+ * <p>
+ * Like PDQsort, if the partition is bad, Blipsort 
+ * scrambles some elements to break up patterns.
+ * </p>
+ * 
+ * <h2>Rotation</h2>
+ * <p>
+ * When all of the candidate pivots are strictly 
+ * descending, it is very likely that the interval 
+ * is descending as well. Lomuto partitioning slows 
+ * significantly on descending data. Therefore, 
+ * Blipsort neglects to sort descending candidates 
+ * and instead swap-rotates the entire interval 
+ * before partitioning.
  * </p>
  *
  * @authors Josh Bloch
@@ -590,7 +661,7 @@ void qSort
          * During partitioning:
          * 
          * +-------------------------------------------------------------+
-         * |  ... == p  |  ... > p  | * |     ... ? ...      |  ... > p  |
+         * |  ... == h  |  ... > h  | * |     ... ? ...      |  ... > h  |
          * +-------------------------------------------------------------+
          * ^            ^           ^                        ^           ^
          * low          l           k                        g         high
@@ -598,7 +669,7 @@ void qSort
          * After partitioning:
          * 
          * +-------------------------------------------------------------+
-         * |           ... == p           |            > p ...           |
+         * |           ... == h           |            > h ...           |
          * +-------------------------------------------------------------+
          * ^                              ^                              ^
          * low                            l                           high
@@ -773,6 +844,17 @@ void qSort
 
 namespace Arrays 
 {
+    /**
+     * <h1>
+     *  <b>
+     *  <i>blipsort</i>
+     *  </b>
+     * </h1> 
+     * 
+     * <p>
+     * Sorts the given array in ascending order.
+     * </p>
+     */
     template <typename E>
     inline void blipsort
         (
