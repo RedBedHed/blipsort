@@ -2,6 +2,10 @@
  
 A highly-optimized (and tiny) Introsort variant that draws from PDQsort, Java, and Orson Peter's branchless Lomuto partitioning. Iterative version [Here](https://github.com/RedBedHed/blipsort_iterative).
 
+## Visualization
+
+ [![IMAGE ALT TEXT HERE](https://youtu.be/SKVQabGamA4/0.jpg)](https://youtu.be/SKVQabGamA4)
+
 ## Speed
 
 ![Speed](https://github.com/RedBedHed/BLPDQsort/blob/main/blipsort_speed.png)
