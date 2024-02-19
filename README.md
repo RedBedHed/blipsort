@@ -2,10 +2,6 @@
  
 A highly-optimized (and tiny) Introsort variant that draws from PDQsort, Java, and Orson Peter's branchless Lomuto partitioning. Iterative version [Here](https://github.com/RedBedHed/blipsort_iterative).
 
-## Visualization
-
-https://github.com/RedBedHed/blipsort/assets/58797872/00986779-05a3-430a-bc67-11eb45a54756
-
 ## Speed
 
 ![Speed](https://github.com/RedBedHed/BLPDQsort/blob/main/blipsort_speed.png)
@@ -17,6 +13,10 @@ https://github.com/RedBedHed/blipsort/assets/58797872/00986779-05a3-430a-bc67-11
 | Best | Average | Worst | Memory |
 |------|---------|-------|--------|
 | n    | n log n | n log n | log n |
+
+## Visualization *(Sound of Sorting program by Timo Bingmann)*
+
+https://github.com/RedBedHed/blipsort/assets/58797872/00986779-05a3-430a-bc67-11eb45a54756
 
 ## Techniques
 
