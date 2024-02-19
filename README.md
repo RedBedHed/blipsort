@@ -18,7 +18,7 @@ A highly-optimized (and tiny) Introsort variant that draws from PDQsort, Java, a
 
 https://github.com/RedBedHed/blipsort/assets/58797872/00986779-05a3-430a-bc67-11eb45a54756
 
-###### *Blipsort ported into the Sound of Sorting program by Timo Bingmann*
+###### *Blipsort, ported into the Sound of Sorting program by Timo Bingmann*
 
 ## Techniques
 
