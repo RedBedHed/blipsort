@@ -4,7 +4,7 @@ A highly-optimized (and tiny) Introsort variant that draws from PDQsort, Java, a
 
 ## Visualization
 
- [![IMAGE ALT TEXT HERE](https://youtu.be/SKVQabGamA4/0.jpg)](https://youtu.be/SKVQabGamA4)
+ [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/SKVQabGamA4/0.jpg)](https://www.youtube.com/watch?v=SKVQabGamA4)
 
 ## Speed
 
