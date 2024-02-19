@@ -14,7 +14,8 @@ A highly-optimized (and tiny) Introsort variant that draws from PDQsort, Java, a
 |------|---------|-------|--------|
 | n    | n log n | n log n | log n |
 
-## Visualization *(Sound of Sorting program by Timo Bingmann)*
+## Visualization
+###### *(Ported into the Sound of Sorting program by Timo Bingmann)*
 
 https://github.com/RedBedHed/blipsort/assets/58797872/00986779-05a3-430a-bc67-11eb45a54756
 
