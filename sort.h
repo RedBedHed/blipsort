@@ -12,7 +12,7 @@ namespace Algo
     AscendingThreshold = 8,
     LargeDataThreshold = 128,
     DoubleWordBitCount = 31,
-    DeBruijnShitAmount = 58
+    DeBruijnShiftAmoun = 58
 };
 
 /**
@@ -86,7 +86,7 @@ constexpr int log2
 #else
     parallelPrefixFill(l);
     return DeBruijnTableF[(int)
-        ((l * DeBruijn64) >> DeBruijnShitAmount)
+        ((l * DeBruijn64) >> DeBruijnShiftAmoun)
     ];
 #endif
 }
