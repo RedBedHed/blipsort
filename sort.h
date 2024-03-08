@@ -3,13 +3,16 @@
 #define SORT_H
 #include <iostream>
 #include <cassert>
+#include <bit>
 
 namespace Algo
 { enum : uint32_t
 {
     InsertionThreshold = 88,
     AscendingThreshold = 8,
-    LargeDataThreshold = 128
+    LargeDataThreshold = 128,
+    DoubleWordBitCount = 31,
+    DeBruijnShitAmount = 58
 };
 
 /**
@@ -63,14 +66,26 @@ constexpr void parallelPrefixFill
 }
 
 /**
- * bitScanReverse
+ * Calculates floor of log2
+ * 
  * @authors Kim Walisch
  * @authors Mark Dickinson
+ * @authors Ellie Moore 
  * @param bb bitboard to scan
  * @precondition bb != 0
  * @return index (0..63) of most significant one bit
  */
-constexpr int bitScanRev
+#if __cplusplus >= 202002L
+constexpr int log2
+    ( 
+    uint32_t l 
+    )
+{ 
+    assert(l != 0);
+    return std::countl_zero(l) ^ DoubleWordBitCount; 
+}
+#else
+constexpr int log2
     (
     uint32_t l
     ) 
@@ -78,9 +93,10 @@ constexpr int bitScanRev
     assert(l != 0);
     parallelPrefixFill(l);
     return DeBruijnTableF[(int)
-        ((l * DeBruijn64) >> 58U)
+        ((l * DeBruijn64) >> DeBruijnShitAmount)
     ];
 }
+#endif
 
 /**
  * A simple swap method.
@@ -96,10 +112,7 @@ constexpr void swap
     E *const j
     ) 
 {
-    E const
-    el = *i;
-    *i = *j;
-    *j = el;
+    E const el = *i; *i = *j; *j = el;
 }
 
 /**
@@ -868,15 +881,16 @@ namespace Arrays
      * </h1> 
      * 
      * <p>
-     * Sorts the given array in ascending order.
+     * Sorts the given array with provided comparator
+     * or in ascending order if nonesuch.
      * </p>
      */
-    template <typename E, class Cmp>
+    template <typename E, class Cmp = std::less<>>
     inline void blipsort
         (
         E* const a,
         const uint32_t cnt,
-        Cmp cmp
+        Cmp cmp = std::less<>()
         ) 
     {
         if(cnt < Algo::InsertionThreshold)
@@ -884,9 +898,7 @@ namespace Arrays
             Algo::iSort<0,0>(a, a + (cnt - 1), cmp);
             return;
         }
-        // floor of log base 2 of cnt.
-        const int log2Cnt = Algo::bitScanRev(cnt);
-        return Algo::qSort(a, a + (cnt - 1), log2Cnt, cmp);
+        return Algo::qSort(a, a + (cnt - 1), Algo::log2(cnt), cmp);
     }
 }
 
