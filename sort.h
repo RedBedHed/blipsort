@@ -11,8 +11,11 @@ namespace Algo
     InsertionThreshold = 88,
     AscendingThreshold = 8,
     LargeDataThreshold = 128,
+#if __cpp_lib_bitops >= 201907L
     DoubleWordBitCount = 31,
+#else
     DeBruijnShiftAmoun = 58
+#endif
 };
 
 /**
