@@ -18,13 +18,16 @@ namespace Algo
 /**
  * The DeBruijn constant.
  */
+#if __cpp_lib_bitops < 201907L
 constexpr uint64_t DeBruijn64 =
     0x03F79D71B4CB0A89L;
+#endif
 
 /**
  * The DeBruijn map from key to integer
  * square index.
  */
+#if __cpp_lib_bitops < 201907L
 constexpr uint8_t DeBruijnTableF[] = 
 {
     0,  47,  1, 56, 48, 27,  2, 60,
@@ -36,6 +39,7 @@ constexpr uint8_t DeBruijnTableF[] =
     25, 39, 14, 33, 19, 30,  9, 24,
     13, 18,  8, 12,  7,  6,  5, 63
 };
+#endif
 
 /**
  * Fill trailing bits using prefix fill.
@@ -53,6 +57,7 @@ constexpr uint8_t DeBruijnTableF[] =
  * @tparam E The type
  * @param x The integer
  */
+#if __cpp_lib_bitops < 201907L
 constexpr void parallelPrefixFill
     (
     uint32_t & x
@@ -64,6 +69,7 @@ constexpr void parallelPrefixFill
     x |= x >> 8U;
     x |= x >> 16U;
 }
+#endif
 
 /**
  * Calculates floor of log2
