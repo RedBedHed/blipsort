@@ -266,7 +266,7 @@ inline bool iSort
     E *const low, 
     E *const high,
     Cmp cmp,
-    bool leftmost = false
+    bool leftmost = true
     ) 
 {
     E* l = low;
@@ -881,7 +881,7 @@ namespace Arrays
     {
         if(cnt < Algo::InsertionThreshold)
         {
-            Algo::iSort<0,0>(a, a + (cnt - 1), cmp, true);
+            Algo::iSort<0,0>(a, a + (cnt - 1), cmp);
             return;
         }
         // floor of log base 2 of cnt.
