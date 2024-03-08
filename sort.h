@@ -75,28 +75,21 @@ constexpr void parallelPrefixFill
  * @precondition bb != 0
  * @return index (0..63) of most significant one bit
  */
-#if __cplusplus >= 202002L
-constexpr int log2
-    ( 
-    uint32_t l 
-    )
-{ 
-    assert(l != 0);
-    return std::countl_zero(l) ^ DoubleWordBitCount; 
-}
-#else
 constexpr int log2
     (
     uint32_t l
     ) 
 {
     assert(l != 0);
+#if __cpp_lib_bitops >= 201907L
+    return std::countl_zero(l) ^ DoubleWordBitCount; 
+#else
     parallelPrefixFill(l);
     return DeBruijnTableF[(int)
         ((l * DeBruijn64) >> DeBruijnShitAmount)
     ];
-}
 #endif
+}
 
 /**
  * A simple swap method.
