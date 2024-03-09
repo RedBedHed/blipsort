@@ -132,7 +132,7 @@ inline void siftDown
     E* const a,
     const int i,
     const int size,
-    Cmp cmp
+    const Cmp cmp
     ) 
 {
     // Store size in
@@ -219,7 +219,7 @@ inline void hSort
     (
     E* const low,
     E* const high,
-    Cmp cmp
+    const Cmp cmp
     ) 
 {
     E* r = high + 1;
@@ -280,8 +280,8 @@ inline bool iSort
     (
     E *const low, 
     E *const high,
-    Cmp cmp,
-    bool leftmost = true
+    const Cmp cmp,
+    const bool leftmost = true
     ) 
 {
     E* l = low;
@@ -503,7 +503,7 @@ inline void qSort
     E * low,
     E * high,
     int height,
-    Cmp cmp,
+    const Cmp cmp,
     bool leftmost = true
     ) 
 {
@@ -892,7 +892,7 @@ namespace Arrays
         (
         E* const a,
         const uint32_t cnt,
-        Cmp cmp = std::less<>()
+        const Cmp cmp = std::less<>()
         ) 
     {
         if(cnt < Algo::InsertionThreshold)
