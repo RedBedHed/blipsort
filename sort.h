@@ -375,6 +375,21 @@ inline bool iSort
 }
 
 /**
+ * Explicit constexpr ternary.
+ * 
+ * @tparam EXP the constexpr
+ * @tparam E the return type
+ * @param a the true value
+ * @param b the false value
+ */
+template<bool EXP, typename E>
+constexpr E ternary(E a, E b)
+{
+    if constexpr (EXP) return a;
+    else return b;
+}
+
+/**
  * Scramble a few elements to help
  * break patterns.
  *
@@ -497,7 +512,7 @@ inline void scramble
  * tree from the initial height of 2log<sub>2</sub>n
  */
 template
-<bool Root = true, typename E, class Cmp>
+<bool Branch, bool Root = true, typename E, class Cmp>
 inline void qSort
     (
     E * low,
@@ -645,8 +660,7 @@ inline void qSort
         // Don't worry about the
         // even size case. One
         // out-of-order element
-        // is no big deal for
-        // branchless Lomuto.
+        // is no big deal.
         else
         {
             E* u = low;
@@ -677,8 +691,8 @@ inline void qSort
                !cmp(h, *mid) || 
                !cmp(h, *sr))
             {
-                E* l = low - 1;
-                E* g = high + 1;
+                E* l = low - 1,
+                 * g = high + 1;
 
                 // skip over data
                 // in place.         
@@ -688,7 +702,46 @@ inline void qSort
                     while(!cmp(h, *++l) && l < g);
                 else 
                     while(!cmp(h, *++l));
-                
+
+                // If we are sorting 
+                // non-arithmetic types,
+                // use Hoare for fewer
+                // moves.
+                if constexpr (Branch)
+                {
+        /**
+         * Partition left by branchful Hoare scheme
+         * 
+         * During partitioning:
+         * 
+         * +-------------------------------------------------------------+
+         * |    ... == h     |        ... ? ...        |     ... > h     |
+         * +-------------------------------------------------------------+
+         * ^                 ^                         ^                 ^
+         * low               l                         k              high
+         * 
+         * After partitioning:
+         * 
+         * +-------------------------------------------------------------+
+         * |           ... == h           |            > h ...           |
+         * +-------------------------------------------------------------+
+         * ^                              ^                              ^
+         * low                            l                           high
+         */
+                    while(l < g)
+                    {
+                        swap(l, g);
+                        while(cmp(h, *--g));
+                        while(!cmp(h, *++l));
+                    }
+                }
+
+                // If we are sorting 
+                // arithmetic types,
+                // use branchless lomuto
+                // for fewer branches.
+                else
+                {   
         /**
          * Partition left by branchless Lomuto scheme
          * 
@@ -708,16 +761,22 @@ inline void qSort
          * ^                              ^                              ^
          * low                            l                           high
          */
-                E * k = l, p = *l;
-                while(k < g)
-                {
-                    *k++ = *l;
-                    *l = *k;
-                    l += !cmp(h, *l);
+                    E * k = l, p = *l;
+                    while(k < g)
+                    {
+                        *k++ = *l;
+                        *l = *k;
+                        l += !cmp(h, *l);
+                    }
+                    *k = *l;
+                    *l = p;
+                    l += !cmp(h, p);
+
                 }
-                *k = *l;
-                *l = p;
-                l += !cmp(h, p);
+
+                // Advance low to the
+                // start of the right
+                // partition.
                 low = l;
 
                 // If we have nothing 
@@ -733,26 +792,37 @@ inline void qSort
         }
 
         // Initialize l and k.
-        E *l = low - 1, 
-          *k = high + 1;
+        E *l = ternary<Branch>(low, low - 1),
+          *k = high + 1, * g;
 
         // Assign midpoint to pivot
         // variable.
         const E p = *mid;
 
+        // If we are sorting 
+        // non-arithmetic types, bring 
+        // left end inside. Left end 
+        // will be replaced and pivot 
+        // will be swapped back later.
+        if constexpr(Branch)
+            *mid = *low;
+
         // skip over data
         // in place.
         while(cmp(*++l, p));
 
-        // Bring left end inside.
-        // Left end will be
-        // replaced and pivot will
-        // be swapped back later.
-        *mid = *l;
+        // If we are sorting 
+        // arithmetic types, bring 
+        // left end inside. Left end 
+        // will be replaced and pivot 
+        // will be swapped back later.
+        if constexpr(!Branch)
+            *mid = *l;
 
         // skip over data
         // in place.
-        if(l == low)
+        if(ternary<Branch>
+            (l == low + 1, l == low))
             while(!cmp(*--k, p) && k > l);
         else 
             while(!cmp(*--k, p));
@@ -764,9 +834,45 @@ inline void qSort
         ((l - low) + (high - k)) 
             < (x >> 1U);
 
-        // Initialize g.
-        E* g = l;
+        // If we are sorting 
+        // non-arithmetic types, use 
+        // Hoare for fewer moves.
+        if constexpr (Branch)
+        {
+        /**
+         * Partition by branchful Hoare scheme
+         * 
+         * During partitioning:
+         * 
+         * +-------------------------------------------------------------+
+         * |     ... < p     |        ... ? ...        |    ... >= p     |
+         * +-------------------------------------------------------------+
+         * ^                 ^                         ^                 ^
+         * low               l                         k              high
+         * 
+         * After partitioning:
+         * 
+         * +-------------------------------------------------------------+
+         * |           ... < p            |            >= p ...          |
+         * +-------------------------------------------------------------+
+         * ^                              ^                              ^
+         * low                            l                           high
+         */
+            while(l < k)
+            {
+                swap(l, k);
+                while(cmp(*++l, p));
+                while(!cmp(*--k, p));
+            }
+            *low = *--l; *l = p;
+        }
 
+        // If we are sorting 
+        // arithmetic types, use 
+        // branchless lomuto for 
+        // fewer branches.
+        else
+        {
         /**
          * Partition by branchless Lomuto scheme
          * 
@@ -786,13 +892,15 @@ inline void qSort
          * ^                              ^                              ^
          * low                            l                           high
          */
-        while(g < k)
-        {
-            *g++ = *l;
-            *l = *g;
-            l += cmp(*l, p);
+            g = l;
+            while(g < k)
+            {
+                *g++ = *l;
+                *l = *g;
+                l += cmp(*l, p);
+            }
+            *g = *l; *l = p;
         }
-        *g = *l; *l = p;
 
         // Skip the pivot.
         g = l + (l < high);
@@ -837,7 +945,7 @@ inline void qSort
         --height;
 
         // Sort left portion.
-        l1: qSort<0>
+        l1: qSort<Branch,0>
         (low, l, height, cmp, leftmost);
 
         // Sort right portion 
@@ -900,7 +1008,8 @@ namespace Arrays
             Algo::iSort<0,0>(a, a + (cnt - 1), cmp);
             return;
         }
-        return Algo::qSort(a, a + (cnt - 1), Algo::log2(cnt), cmp);
+        return Algo::qSort<!std::is_arithmetic<E>::value>
+            (a, a + (cnt - 1), Algo::log2(cnt), cmp);
     }
 }
 
