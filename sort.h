@@ -1007,7 +1007,9 @@ namespace Arrays
             Algo::iSort<0,0>(a, a + (cnt - 1), cmp);
             return;
         }
-        return Algo::qSort<!std::is_arithmetic<E>::value>
+        return Algo::qSort
+        <!std::is_arithmetic<E>::value && 
+         !std::is_pointer<E>::value>
             (a, a + (cnt - 1), Algo::log2(cnt), cmp);
     }
 }
