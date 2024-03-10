@@ -771,7 +771,6 @@ inline void qSort
                     *k = *l;
                     *l = p;
                     l += !cmp(h, p);
-
                 }
 
                 // Advance low to the
