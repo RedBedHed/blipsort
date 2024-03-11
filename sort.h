@@ -77,8 +77,8 @@ constexpr void parallelPrefixFill
 /**
  * Calculates floor of log2
  * 
- * @authors Kim Walisch
- * @authors Mark Dickinson
+ * @authors Kim Walisch - source
+ * @authors Mark Dickinson - source
  * @authors Ellie Moore 
  * @param bb bitboard to scan
  * @precondition bb != 0
@@ -263,9 +263,9 @@ inline void hSort
  * and insert two elements in one go.
  * </p>
  *
- * @authors Josh Bloch
- * @authors Jon Bently
- * @authors Orson Peters
+ * @authors Josh Bloch - source
+ * @authors Jon Bently - source
+ * @authors Orson Peters - source
  * @authors Ellie Moore
  * @tparam E the element type
  * @tparam Are we sorting optimistically?
@@ -502,10 +502,10 @@ inline void scramble
  * before partitioning.
  * </p>
  *
- * @authors Josh Bloch
- * @authors Jon Bently
- * @authors Orson Peters
- * @authors Lukas Bergdoll
+ * @authors Josh Bloch - source
+ * @authors Jon Bently - source
+ * @authors Orson Peters - source
+ * @authors Lukas Bergdoll - source
  * @authors Ellie Moore
  * @tparam E the element type
  * @tparam Root whether this is the sort root
