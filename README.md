@@ -24,6 +24,7 @@ https://github.com/RedBedHed/blipsort/assets/58797872/00986779-05a3-430a-bc67-11
 
 ### Branchless Lomuto
 The decades-old partitioning algorithm recently made a resurgence when researchers discovered ways to remove the inner branch. Orson Peter's method&mdash; which he published on his blog a little under two months ago&mdash; is the fastest yet. It employs a gap in the data to move elements twice per iteration rather than swapping them (three moves).
+For arithmetic and pointer types, Blipsort employs branchless Lomuto partitioning. For other, larger types, Blipsort uses branchful Hoare partitioning.
 
 ### Pivot Selectivity
 Blipsort carefully selects the pivot from the middle of five sorted candidates. These candidates allow the sort to determine whether the data in the current interval is approximately descending and inform its "partition left" strategy.
@@ -47,11 +48,13 @@ Like PDQsort, if the partition is bad, Blipsort scrambles some elements to break
 ### Rotation
 When all of the candidate pivots are strictly descending, it is very likely that the interval is descending as well. Lomuto partitioning slows significantly on descending data. Therefore, Blipsort neglects to sort descending candidates and instead swap-rotates the entire interval before partitioning.
 
+### Custom Comparators
+Blipsort allows its user to implement a custom boolean comparator. Comparators are best implemented with a lambda and no branches. A comparator implemented with a lambda can be inlined by an optimizing compiler, while a constexpr/inline comparator typically cannot.
+
 ## Sources
 
 [Here](https://github.com/orlp/pdqsort)
 is the PDQsort algorithm by Orson Peters
-
 
 [Here](https://orlp.net/blog/branchless-lomuto-partitioning/)
 is the branchless Lomuto blog post by Orson Peters
