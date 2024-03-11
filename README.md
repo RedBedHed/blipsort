@@ -49,7 +49,7 @@ Like PDQsort, if the partition is bad, Blipsort scrambles some elements to break
 When all of the candidate pivots are strictly descending, it is very likely that the interval is descending as well. Lomuto partitioning slows significantly on descending data. Therefore, Blipsort neglects to sort descending candidates and instead swap-rotates the entire interval before partitioning.
 
 ### Custom Comparators
-Blipsort allows its user to implement a custom boolean comparator. Comparators are best implemented with a lambda and no branches. A comparator implemented with a lambda can be inlined by an optimizing compiler, while a constexpr/inline comparator typically cannot.
+Blipsort allows its user to implement a custom boolean comparator. Comparators are best implemented with a lambda and no branches. A comparator implemented with a lambda can be inlined by an optimizing compiler, while a comparator implemented with a constexpr/inline function typically cannot.
 
 ## Sources
 
