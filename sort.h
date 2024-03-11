@@ -439,7 +439,10 @@ inline void scramble
  * under two months ago— is the fastest yet. It 
  * employs a gap in the data to move elements 
  * twice per iteration rather than swapping them 
- * (three moves).
+ * (three moves). For arithmetic and pointer types, 
+ * Blipsort employs branchless Lomuto partitioning. 
+ * For other, larger types, Blipsort uses branchful 
+ * Hoare partitioning.
  * </p>
  * 
  * <h2>Pivot Selectivity</h2>
@@ -500,6 +503,17 @@ inline void scramble
  * Blipsort neglects to sort descending candidates 
  * and instead swap-rotates the entire interval 
  * before partitioning.
+ * </p>
+ *
+ * <h2>Custom Comparators</h2>
+ * <p>
+ * Blipsort allows its user to implement a custom 
+ * boolean comparator. A comparator is best 
+ * implemented with a lambda and no branches. A 
+ * comparator implemented with a lambda can be 
+ * inlined by an optimizing compiler, while a 
+ * comparator implemented with a constexpr/inline 
+ * function typically cannot.
  * </p>
  *
  * @authors Josh Bloch - source
