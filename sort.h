@@ -434,8 +434,8 @@ inline void scramble
  * <p>
  * The decades-old partitioning algorithm recently 
  * made a resurgence when researchers discovered 
- * ways to remove the inner branch. Orson Peter's 
- * method— which he published on his blog a little 
+ * ways to remove the inner branch. Lukas Bergdoll
+ * and Orson Peters' method— published a little 
  * under two months ago— is the fastest yet. It 
  * employs a gap in the data to move elements 
  * twice per iteration rather than swapping them 
@@ -505,6 +505,7 @@ inline void scramble
  * @authors Josh Bloch
  * @authors Jon Bently
  * @authors Orson Peters
+ * @authors Lukas Bergdoll
  * @authors Ellie Moore
  * @tparam E the element type
  * @tparam Root whether this is the sort root
