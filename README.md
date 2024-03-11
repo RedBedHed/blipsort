@@ -57,7 +57,7 @@ Blipsort allows its user to implement a custom boolean comparator. A comparator 
 is the PDQsort algorithm by Orson Peters
 
 [Here](https://orlp.net/blog/branchless-lomuto-partitioning/)
-is the branchless Lomuto blog post by Orson Peters
+is the branchless Lomuto blog post by Orson Peters and Lukas Bergdoll
 
 [Here](https://](https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/util/DualPivotQuicksort.java)https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/util/DualPivotQuicksort.java)
 is Java's Dual Pivot Quicksort
