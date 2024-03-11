@@ -288,6 +288,9 @@ inline bool iSort
     E* r = high;
     int moves = 0;
 
+    // We aren't guarding, jump
+    // straight into pair insertion
+    // sort.
     if constexpr (NoGuard)
         goto g1;
 
