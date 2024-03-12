@@ -24,7 +24,7 @@ https://github.com/RedBedHed/blipsort/assets/58797872/00986779-05a3-430a-bc67-11
 
 ### Branchless Lomuto
 The decades-old partitioning algorithm recently made a resurgence when researchers discovered ways to remove the inner branch. Orson Peters' and Lukas Bergdoll's [method](https://orlp.net/blog/branchless-lomuto-partitioning/)&mdash; published under two months ago&mdash; is the fastest yet. It employs a gap in the data to move elements twice per iteration rather than swapping them (three moves).
-For arithmetic and pointer types, Blipsort employs branchless Lomuto partitioning. For other, larger types, Blipsort uses branchful Hoare partitioning.
+For arithmetic and pointer types, Blipsort employs branchless Lomuto partitioning. For other, larger types, Blipsort uses branchful Hoare partitioning. This partitioning is slower than fulcrum or block partitioning, however, it uses no extra swap memory (better for medium/large embedded systems).
 
 ### Pivot Selectivity
 Blipsort carefully selects the pivot from the middle of five sorted candidates. These candidates allow the sort to determine whether the data in the current interval is approximately descending and inform its "partition left" strategy.
