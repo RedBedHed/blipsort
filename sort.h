@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cassert>
 #include <bit>
+#include <cstdint>
 
 namespace Algo
 { enum : uint32_t
