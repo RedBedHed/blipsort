@@ -62,7 +62,7 @@ To sort with branchless Lomuto on small types and block Hoare partitioning on la
 Arrays::blipsort(array, size);
 ```
 
-To sort with branchless Lomuto on small types and brancy Hoare partitioning on large type (to conserve memory) call blipsort like so:
+To sort with branchless Lomuto on small types and branchy Hoare partitioning on large type (to conserve memory) call blipsort like so:
 ```c++
 Arrays::blipsort_embed(array, size);
 ```
