@@ -12,6 +12,7 @@ namespace Algo
     InsertionThreshold = 88,
     AscendingThreshold = 8,
     LargeDataThreshold = 128,
+    BlockSize          = 64, 
 #if __cpp_lib_bitops >= 201907L
     DoubleWordBitCount = 31,
 #else
@@ -138,11 +139,11 @@ inline void siftDown
 {
     // Store size in
     // a local variable.
-    const uint32_t n = size;
+    const size_t n = size;
 
     // Establish non-leaf
     // boundary.
-    const uint32_t o = n >> 1U;
+    const size_t o = n >> 1U;
 
     // Extract the element
     // to sift.
@@ -150,7 +151,7 @@ inline void siftDown
 
     // initialize temporary
     // variables.
-    uint32_t x = i, l, r;
+    size_t x = i, l, r;
 
     // consider only non-leaf
     // nodes.
@@ -276,7 +277,7 @@ inline void hSort
  * left-most partition.
  */
 template
-<bool NoGuard, bool Bail = true, typename E, class Cmp>
+<bool NoGuard, bool Guard, bool Bail = true, typename E, class Cmp>
 inline bool iSort
     (
     E *const low, 
@@ -292,11 +293,15 @@ inline bool iSort
     // We aren't guarding, jump
     // straight into pair insertion
     // sort.
-    if constexpr (NoGuard)
+    if constexpr (Guard)
         goto g1;
+    if constexpr (NoGuard)
+        goto g2;
 
     if (leftmost) 
     {
+        g1:
+
         // Traditional
         // insertion
         // sort.
@@ -319,7 +324,7 @@ inline bool iSort
     } 
     else 
     {
-        g1:
+        g2:
 
         // Pair insertion sort.
         // Skip elements that are
@@ -387,7 +392,11 @@ inline bool iSort
  * @param b the false value
  */
 template<bool EXP, typename E>
-constexpr E ternary(E a, E b)
+constexpr E ternary
+    (
+    E a, 
+    E b
+    )
 {
     if constexpr (EXP) return a;
     else return b;
@@ -402,11 +411,11 @@ constexpr E ternary(E a, E b)
  * @param j the second element pointer
  */
 template<typename E>
-inline void scramble
+constexpr void scramble
     (
     E* const low, 
     E* const high, 
-    const uint32_t len
+    const size_t len
     ) 
 {
     if(len >= InsertionThreshold) 
@@ -422,6 +431,25 @@ inline void scramble
             swap(high - 1, high - (_4th + 1));
         }
     }
+}
+
+/**
+ * Aligns the given pointer on 64-bit 
+ * boundary.
+ * 
+ * @tparam E the element type
+ * @param p pointer to memory to align
+ */
+template<typename E>
+constexpr E* align
+    (
+    E* p
+    )
+{
+    // return p;
+    return reinterpret_cast<E*>((
+        reinterpret_cast<uintptr_t>(p) + (BlockSize - 1)
+    ) & -uintptr_t(BlockSize));
 }
 
 /**
@@ -442,8 +470,8 @@ inline void scramble
  * twice per iteration rather than swapping them 
  * (three moves). For arithmetic and pointer types, 
  * Blipsort employs branchless Lomuto partitioning. 
- * For other, larger types, Blipsort uses branchful 
- * Hoare partitioning.
+ * For other, larger types, Blipsort uses branchless 
+ * or branchful Hoare partitioning.
  * </p>
  * 
  * <h2>Pivot Selectivity</h2>
@@ -521,6 +549,8 @@ inline void scramble
  * @authors Jon Bently - source
  * @authors Orson Peters - source
  * @authors Lukas Bergdoll - source
+ * @authors Stefan Edelkamp - source
+ * @authors Armin Weiß - source
  * @authors Ellie Moore
  * @tparam E the element type
  * @tparam Root whether this is the sort root
@@ -531,7 +561,7 @@ inline void scramble
  * tree from the initial height of 2log<sub>2</sub>n
  */
 template
-<bool Branch, bool Root = true, typename E, class Cmp>
+<bool Expense, bool Block, bool Root = true, typename E, class Cmp>
 inline void qSort
     (
     E * low,
@@ -542,7 +572,7 @@ inline void qSort
     ) 
 {
     // Tail call loop.
-    for(uint32_t x = high - low;;) 
+    for(size_t x = high - low;;) 
     {
         // If this is not the
         // root node, sort the 
@@ -561,7 +591,7 @@ inline void qSort
             // to use guarded insertion
             // sort if this is the
             // leftmost partition.
-            iSort<0,0>
+            iSort<0,0,0>
             (low, high, cmp, leftmost);
             return;
         }
@@ -576,7 +606,7 @@ inline void qSort
         // Find an inexpensive
         // approximation of a third of
         // the interval.
-        const uint32_t y = x >> 2U,
+        const size_t y = x >> 2U,
             _3rd = y + (y >> 1U),
             _6th = _3rd >> 1U;
 
@@ -726,7 +756,7 @@ inline void qSort
                 // non-arithmetic types,
                 // use Hoare for fewer
                 // moves.
-                if constexpr (Branch)
+                if constexpr (Expense)
                 {
         /**
          * Partition left by branchful Hoare scheme
@@ -783,8 +813,8 @@ inline void qSort
                     E * k = l, p = *l;
                     while(k < g)
                     {
-                        *k++ = *l;
-                        *l = *k;
+                        *k = *l;
+                        *l = *++k;
                         l += !cmp(h, *l);
                     }
                     *k = *l;
@@ -810,7 +840,7 @@ inline void qSort
         }
 
         // Initialize l and k.
-        E *l = ternary<Branch>(low, low - 1),
+        E *l = ternary<Expense>(low, low - 1),
           *k = high + 1, * g;
 
         // Assign midpoint to pivot
@@ -822,7 +852,7 @@ inline void qSort
         // left end inside. Left end 
         // will be replaced and pivot 
         // will be swapped back later.
-        if constexpr(Branch)
+        if constexpr(Expense)
             *mid = *low;
 
         // skip over data
@@ -834,12 +864,12 @@ inline void qSort
         // left end inside. Left end 
         // will be replaced and pivot 
         // will be swapped back later.
-        if constexpr(!Branch)
+        if constexpr(!Expense)
             *mid = *l;
 
         // skip over data
         // in place.
-        if(ternary<Branch>
+        if(ternary<Expense>
             (l == low + 1, l == low))
             while(!cmp(*--k, p) && k > l);
         else 
@@ -853,9 +883,10 @@ inline void qSort
             < (x >> 1U);
 
         // If we are sorting 
-        // non-arithmetic types, use 
+        // non-arithmetic types and
+        // conserving memory, use 
         // Hoare for fewer moves.
-        if constexpr (Branch)
+        if constexpr (Expense && !Block)
         {
         /**
          * Partition by branchful Hoare scheme
@@ -882,6 +913,190 @@ inline void qSort
                 while(cmp(*++l, p));
                 while(!cmp(*--k, p));
             }
+            *low = *--l; *l = p;
+        }
+
+        // If we are sorting 
+        // non-arithmetic types and
+        // not conserving memory, use 
+        // Block Hoare for fewer moves
+        // and fewer branches.
+        else if constexpr (Expense)
+        {
+        /**
+         * Partition by branchless (Block) Hoare scheme
+         * 
+         * During partitioning:
+         * 
+         * +-------------------------------------------------------------+
+         * |  ... < p  |   cmp   |   ... ? ...   |   cmp   |  ... >= p   |
+         * +-------------------------------------------------------------+
+         * ^           ^         ^               ^         ^             ^
+         * low         _low      l               k     _high          high
+         * 
+         * After partitioning:
+         * 
+         * +-------------------------------------------------------------+
+         * |           ... < p            |            >= p ...          |
+         * +-------------------------------------------------------------+
+         * ^                              ^                              ^
+         * low                            l                           high
+         */
+            if(l < k)
+            {
+                swap(l++, k);
+
+                // Set up static buffers and
+                // align base pointers to
+                // the cacheline.
+                uint8_t 
+                ols[BlockSize << 1U], 
+                oks[BlockSize << 1U]; 
+                uint8_t
+                * olp = align(ols), 
+                * okp = align(oks); 
+                
+                // Initialize frame pointers.
+                E * _low = l, * _high = k;
+
+                // Initialize offset counts and
+                // start indices for swap routine.
+                size_t nl = 0, nk = 0, ls = 0, ks = 0;
+                
+                while(l < k) 
+                {
+                    // Determine number of elements to fill
+                    // for each offset block without branching.
+                    size_t xx = k - l,
+                    lspl = -(nl == 0) & (xx >> (nk == 0)),
+                    kspl = -(nk == 0) & (xx - lspl);
+                    
+                    // Fill the offset blocks. If the number 
+                    // for either block is larger than 64,
+                    // crop and unroll the loop. Otherwise,
+                    // keep the loop fully rolled.
+                    if(lspl >= BlockSize)
+                    {
+                        size_t i = 0;
+                        do
+                        {
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
+                        } while(i < BlockSize);
+                    }
+                    else
+                    {
+                        for(size_t i = 0; i < lspl; ++i)
+                        {
+                            olp[nl] = i; nl += !cmp(*l, p); ++l;
+                        }
+                    }
+
+                    if(kspl >= BlockSize)
+                    {
+                        size_t i = 0;
+                        do
+                        {
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                        } while(i < BlockSize);
+                    }
+                    else
+                    {
+                        for(size_t i = 0; i < kspl;)
+                        {
+                            okp[nk] = ++i; nk += cmp(*--k, p);
+                        }
+                    }
+
+                    // min(nl, nk), branchless.
+                    size_t n = 
+                        (nl & -(nl < nk)) + (nk & -(nl >= nk));
+
+                    // Swap the elements with the offsets from
+                    // the offset blocks. Set up working block
+                    // pointers and lower block end pointer.
+                    uint8_t* 
+                    ll = olp + ls, * kk = okp + ks, * e = ll + n;
+
+                    // If the offset counts are equal, we are likely
+                    // to be ascending or descending. Use swaps to
+                    // stay O(n). Both blocks must have some offsets 
+                    // to use this routine. If needed, fill the empty 
+                    // one and come back.
+                    if(nl == nk)
+                        for(; ll < e; ++ll, ++kk)
+                            swap(_low + *ll, _high - *kk);
+
+                    // Otherwise, if the minimum offset count is
+                    // greater than 0, swap using a cyclic permutation.
+                    // Both blocks must have some offsets to use this
+                    // routine. If needed, fill the empty one and
+                    // come back.
+                    else if(n > 0)
+                    {
+                        E* _l = _low + *ll, * _k = _high - *kk;
+                        E t = *_l; *_l = *_k;
+                        for(++ll, ++kk; ll < e; ++ll, ++kk)
+                        {
+                            _l = _low  + *ll; *_k = *_l;
+                            _k = _high - *kk; *_l = *_k;
+                        } 
+                        *_k = t;
+                    }
+
+                    // Adjust offset counts and starts. If a block
+                    // is empty, adjust the frame pointers.
+                    nl -= n; nk -= n;
+                    if(nl == 0) { ls = 0; _low  = l; } else ls += n; 
+                    if(nk == 0) { ks = 0; _high = k; } else ks += n;
+                }
+
+                // swap the remaining elements into place.
+                if(nl)
+                {
+                    olp += ls;
+                    for(uint8_t* ll = olp + nl; ll > olp;)
+                        swap(_low + *--ll, --l);
+                }
+
+                if(nk)
+                {
+                    okp += ks;
+                    for(uint8_t* kk = okp + nk; kk > okp; ++l)
+                        swap(_high - *--kk, l);
+                }
+            }
+            
+            // Move the pivot into place.
             *low = *--l; *l = p;
         }
 
@@ -913,8 +1128,8 @@ inline void qSort
             g = l;
             while(g < k)
             {
-                *g++ = *l;
-                *l = *g;
+                *g = *l;
+                *l = *++g;
                 l += cmp(*l, p);
             }
             *g = *l; *l = p;
@@ -926,11 +1141,11 @@ inline void qSort
 
         // Cheaply calculate an
         // eigth of the interval.
-        const uint32_t 
+        const size_t 
             _8th = x >> 3U;
 
         // Calculate interval widths.
-        const uint32_t
+        const size_t
             ls = l - low,
             gs = high - g;
 
@@ -943,9 +1158,9 @@ inline void qSort
            gs >= _8th) 
         {
             if(work) goto l1;
-            if(!iSort<0>(low, l, cmp, leftmost)) 
+            if(!iSort<0,0>(low, l, cmp, leftmost)) 
                 goto l1;
-            if(!iSort<1>(g, high, cmp))
+            if(!iSort<1,0>(g, high, cmp))
                 goto l2;
             return;
         }
@@ -963,7 +1178,7 @@ inline void qSort
         --height;
 
         // Sort left portion.
-        l1: qSort<Branch,0>
+        l1: qSort<Expense,Block,0>
         (low, l, height, cmp, leftmost);
 
         // Sort right portion 
@@ -984,7 +1199,7 @@ inline void qSort
             // If we are in the Root,
             // insertion sort will
             // be unguarded.
-            iSort<1,0>(low, high, cmp);
+            iSort<1,0,0>(low, high, cmp);
             return;
         }
 
@@ -997,6 +1212,34 @@ inline void qSort
 
         leftmost = false;
     }
+}
+
+/**
+ * sort 
+ * 
+ * @tparam E the element type
+ * @tparam Cmp the comparator type
+ * @param a the array to be sorted
+ * @param cnt the size of the the array
+ * @param cmp the comparator
+ */
+template <bool Block = true, typename E, class Cmp>
+inline void blipsort
+    (
+    E* const a,
+    const uint32_t cnt,
+    const Cmp cmp
+    ) 
+{
+    if(cnt < InsertionThreshold)
+    {
+        iSort<0,1,0>(a, a + (cnt - 1), cmp);
+        return;
+    }
+    return qSort
+    <!std::is_arithmetic<E>::value && 
+     !std::is_pointer<E>::value, Block>
+        (a, a + (cnt - 1), log2(cnt), cmp);
 }}
 
 namespace Arrays 
@@ -1012,6 +1255,12 @@ namespace Arrays
      * Sorts the given array with provided comparator
      * or in ascending order if nonesuch.
      * </p>
+     * 
+     * @tparam E the element type
+     * @tparam Cmp the comparator type
+     * @param a the array to be sorted
+     * @param cnt the size of the the array
+     * @param cmp the comparator
      */
     template <typename E, class Cmp = std::less<>>
     inline void blipsort
@@ -1021,15 +1270,38 @@ namespace Arrays
         const Cmp cmp = std::less<>()
         ) 
     {
-        if(cnt < Algo::InsertionThreshold)
-        {
-            Algo::iSort<0,0>(a, a + (cnt - 1), cmp);
-            return;
-        }
-        return Algo::qSort
-        <!std::is_arithmetic<E>::value && 
-         !std::is_pointer<E>::value>
-            (a, a + (cnt - 1), Algo::log2(cnt), cmp);
+        Algo::blipsort(a, cnt, cmp);
+    }
+
+    /**
+     * <h1>
+     *  <b>
+     *  <i>blipsort_embed</i>
+     *  </b>
+     * </h1> 
+     * 
+     * <p>
+     * Sorts the given array with provided comparator
+     * or in ascending order if nonesuch. Conserves
+     * memory by using branchy Hoare instead of 
+     * Block Hoare on large types.
+     * </p>
+     * 
+     * @tparam E the element type
+     * @tparam Cmp the comparator type
+     * @param a the array to be sorted
+     * @param cnt the size of the the array
+     * @param cmp the comparator
+     */
+    template <typename E, class Cmp = std::less<>>
+    inline void blipsort_embed
+        (
+        E* const a,
+        const uint32_t cnt,
+        const Cmp cmp = std::less<>()
+        ) 
+    {
+        Algo::blipsort<0>(a, cnt, cmp);
     }
 }
 
