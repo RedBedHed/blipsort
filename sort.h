@@ -1049,18 +1049,16 @@ inline void qSort
 
                     // If the offset counts are equal, we are likely
                     // to be ascending or descending. Use swaps to
-                    // stay O(n). Both blocks must have some offsets 
-                    // to use this routine. If needed, fill the empty 
-                    // one and come back.
+                    // stay O(n). Both blocks must have some offsets. 
+                    // If needed, fill the empty one(s) and come back.
                     if(nl == nk)
                         for(; ll < e; ++ll, ++kk)
                             swap(_low + *ll, _high - *kk);
 
                     // Otherwise, if the minimum offset count is
                     // greater than 0, swap using a cyclic permutation.
-                    // Both blocks must have some offsets to use this
-                    // routine. If needed, fill the empty one and
-                    // come back.
+                    // Both blocks must have some offsets. If needed, 
+                    // fill the empty one(s) and come back.
                     else if(n > 0)
                     {
                         E* _l = _low + *ll, * _k = _high - *kk;
