@@ -56,13 +56,13 @@ Blipsort allows its user to implement a custom boolean comparator. A comparator 
 
 ## Usage
 
-To sort with branchless Lomuto on small types and block Hoare partitioning on large types, call blipsort like so:
+To sort with branchless Lomuto on small types and block Hoare on large types, call blipsort like so:
 
 ```c++
 Arrays::blipsort(array, size);
 ```
 
-To sort with branchless Lomuto on small types and branchy Hoare partitioning on large types (to conserve memory) call blipsort like so:
+To sort with branchless Lomuto on small types and branchy Hoare on large types (to conserve memory) call blipsort like so:
 ```c++
 Arrays::blipsort_embed(array, size);
 ```
