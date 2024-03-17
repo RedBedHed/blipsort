@@ -946,7 +946,7 @@ inline void qSort
             {
                 swap(l++, k);
 
-                // Set up static buffers and
+                // Set up blocks and
                 // align base pointers to
                 // the cacheline.
                 uint8_t 
@@ -965,16 +965,19 @@ inline void qSort
                 
                 while(l < k) 
                 {
-                    // Determine number of elements to fill
-                    // for each offset block without branching.
+                    // If both blocks are empty, split 
+                    // the interval in two. Otherwise
+                    // give the whole interval to one
+                    // block.
                     size_t xx = k - l,
                     lspl = -(nl == 0) & (xx >> (nk == 0)),
                     kspl = -(nk == 0) & (xx - lspl);
                     
-                    // Fill the offset blocks. If the number 
+                    // Fill the offset blocks. If the split 
                     // for either block is larger than 64,
-                    // crop and unroll the loop. Otherwise,
-                    // keep the loop fully rolled.
+                    // crop it and unroll the loop. Otherwise,
+                    // keep the loop fully rolled. This should
+                    // only happen near the end of partitioning.
                     if(lspl >= BlockSize)
                     {
                         size_t i = 0;
@@ -1037,28 +1040,29 @@ inline void qSort
                         }
                     }
 
-                    // min(nl, nk), branchless.
+                    // n = min(nl, nk), branchless.
                     size_t n = 
                         (nl & -(nl < nk)) + (nk & -(nl >= nk));
 
-                    // Swap the elements with the offsets from
-                    // the offset blocks. Set up working block
-                    // pointers and lower block end pointer.
+                    // Swap the elements using the offsets. 
+                    // Set up working block pointers and lower 
+                    // block end pointer.
                     uint8_t* 
                     ll = olp + ls, * kk = okp + ks, * e = ll + n;
 
                     // If the offset counts are equal, we are likely
-                    // to be ascending or descending. Use swaps to
-                    // stay O(n). Both blocks must have some offsets. 
-                    // If needed, fill the empty one(s) and come back.
+                    // to be ascending or descending. If ascending,
+                    // we don't need to do anything. If descending, 
+                    // use swaps to stay O(n). Both blocks must 
+                    // contain n offsets. If either block is empty,
+                    // fill it and come back.
                     if(nl == nk)
                         for(; ll < e; ++ll, ++kk)
                             swap(_low + *ll, _high - *kk);
 
-                    // Otherwise, if the minimum offset count is
-                    // greater than 0, swap using a cyclic permutation.
-                    // Both blocks must have some offsets. If needed, 
-                    // fill the empty one(s) and come back.
+                    // Otherwise, swap using a cyclic permutation.
+                    // Both blocks must contain n offsets. If either 
+                    // block is empty, fill it and come back.
                     else if(n > 0)
                     {
                         E* _l = _low + *ll, * _k = _high - *kk;
@@ -1072,7 +1076,7 @@ inline void qSort
                     }
 
                     // Adjust offset counts and starts. If a block
-                    // is empty, adjust the frame pointers.
+                    // is empty, adjust its frame pointer.
                     nl -= n; nk -= n;
                     if(nl == 0) { ls = 0; _low  = l; } else ls += n; 
                     if(nk == 0) { ks = 0; _high = k; } else ks += n;
