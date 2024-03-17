@@ -980,34 +980,30 @@ inline void qSort
                     // only happen near the end of partitioning.
                     if(lspl >= BlockSize)
                     {
-                        size_t i = 0;
+                        size_t i = -1;
                         do
                         {
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                            olp[nl] = i++; nl += !cmp(*l, p); ++l;
-                        } while(i < BlockSize);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                            olp[nl] = ++i; nl += !cmp(*l++, p);
+                        } while(i < BlockSize - 1);
                     }
                     else
-                    {
                         for(size_t i = 0; i < lspl; ++i)
-                        {
-                            olp[nl] = i; nl += !cmp(*l, p); ++l;
-                        }
-                    }
+                            olp[nl] = i, nl += !cmp(*l++, p);
 
                     if(kspl >= BlockSize)
                     {
@@ -1033,12 +1029,8 @@ inline void qSort
                         } while(i < BlockSize);
                     }
                     else
-                    {
                         for(size_t i = 0; i < kspl;)
-                        {
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                        }
-                    }
+                            okp[nk] = ++i, nk += cmp(*--k, p);
 
                     // n = min(nl, nk), branchless.
                     size_t n = 
