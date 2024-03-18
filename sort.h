@@ -446,7 +446,6 @@ constexpr E* align
     E* p
     )
 {
-    // return p;
     return reinterpret_cast<E*>((
         reinterpret_cast<uintptr_t>(p) + (BlockSize - 1)
     ) & -uintptr_t(BlockSize));
@@ -981,25 +980,16 @@ inline void qSort
                     if(lspl >= BlockSize)
                     {
                         size_t i = -1;
-                        do
-                        {
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                            olp[nl] = ++i; nl += !cmp(*l++, p);
-                        } while(i < BlockSize - 1);
+                        #define UNROLL \
+                        olp[nl] = ++i; nl += !cmp(*l++, p); \
+                        olp[nl] = ++i; nl += !cmp(*l++, p); \
+                        olp[nl] = ++i; nl += !cmp(*l++, p); \
+                        olp[nl] = ++i; nl += !cmp(*l++, p);
+                        UNROLL UNROLL UNROLL UNROLL
+                        UNROLL UNROLL UNROLL UNROLL
+                        UNROLL UNROLL UNROLL UNROLL
+                        UNROLL UNROLL UNROLL UNROLL
+                        #undef UNROLL
                     }
                     else
                         for(size_t i = 0; i < lspl; ++i)
@@ -1008,25 +998,16 @@ inline void qSort
                     if(kspl >= BlockSize)
                     {
                         size_t i = 0;
-                        do
-                        {
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                            okp[nk] = ++i; nk += cmp(*--k, p);
-                        } while(i < BlockSize);
+                        #define UNROLL \
+                        okp[nk] = ++i; nk += cmp(*--k, p); \
+                        okp[nk] = ++i; nk += cmp(*--k, p); \
+                        okp[nk] = ++i; nk += cmp(*--k, p); \
+                        okp[nk] = ++i; nk += cmp(*--k, p);
+                        UNROLL UNROLL UNROLL UNROLL
+                        UNROLL UNROLL UNROLL UNROLL
+                        UNROLL UNROLL UNROLL UNROLL
+                        UNROLL UNROLL UNROLL UNROLL
+                        #undef UNROLL
                     }
                     else
                         for(size_t i = 0; i < kspl;)
@@ -1119,7 +1100,21 @@ inline void qSort
          * ^                              ^                              ^
          * low                            l                           high
          */
-            g = l;
+            g = l; E* u = k - BlockSize;
+            while(g < u)
+            {
+                #define UNROLL \
+                *g = *l; *l = *++g; l += cmp(*l, p); \
+                *g = *l; *l = *++g; l += cmp(*l, p); \
+                *g = *l; *l = *++g; l += cmp(*l, p); \
+                *g = *l; *l = *++g; l += cmp(*l, p);
+                UNROLL UNROLL UNROLL UNROLL
+                UNROLL UNROLL UNROLL UNROLL
+                UNROLL UNROLL UNROLL UNROLL
+                UNROLL UNROLL UNROLL UNROLL
+                #undef UNROLL
+            }
+
             while(g < k)
             {
                 *g = *l;
