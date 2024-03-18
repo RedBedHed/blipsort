@@ -1119,25 +1119,30 @@ inline void qSort
          * ^                              ^                              ^
          * low                            l                           high
          */
-            g = l; E* u = k - (BlockSize >> 2U);
-            while(g < u)
+            g = l; 
+            
+            if(Block)
             {
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
-                *g = *l; *l = *++g; l += cmp(*l, p);
+                E* u = k - (BlockSize >> 2U);
+                while(g < u)
+                {
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                    *g = *l; *l = *++g; l += cmp(*l, p);
+                }
             }
 
             while(g < k)
