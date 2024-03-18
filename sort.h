@@ -1121,7 +1121,7 @@ inline void qSort
          */
             g = l; 
             
-            if(Block)
+            if constexpr (Block)
             {
                 E* u = k - (BlockSize >> 2U);
                 while(g < u)
