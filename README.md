@@ -45,7 +45,12 @@ and doesn't need to perform a lower bound check, making it slightly faster than 
 Similar to PDQsort, if any of the three middlemost candidate pivots is equal to the rightmost element of the partition at left, Blipsort moves equal elements to the left with branchless Lomuto and continues to the right, solving the dutch-flag problem and yeilding linear time on data comprised of equal elements.
 
 ### Optimism
-Similar to PDQsort, if the partition is "good" (not highly unbalanced), Blipsort switches to insertion sort. If the Insertion sort makes more than a constant number of moves, Blipsort bails and resumes quicksort. This allows Blipsort to achieve linear time on already-sorted data.
+Similar to PDQsort, if the partition is "good" (not highly unbalanced) and we have done little work in partitioning, Blipsort switches to insertion sort. If the Insertion sort makes more than a constant number of moves, Blipsort bails and resumes quicksort. This allows Blipsort to achieve linear time on already-sorted data.
+
+Work is calculated as:
+```c++
+ bool work = ((skipped_left) + (skipped_right)) < (interval_width / 2);
+```
 
 ### Breaking Patterns
 Like PDQsort, if the partition is bad, Blipsort scrambles some elements to break up patterns.
