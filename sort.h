@@ -1078,15 +1078,21 @@ inline void qSort
                 if(nl)
                 {
                     olp += ls;
-                    for(uint8_t* ll = olp + nl; ll > olp;)
-                        swap(_low + *--ll, --l);
+                    for(uint8_t* ll = olp + nl;;)
+                    {
+                        swap(_low + *--ll, --l); 
+                        if(ll <= olp) break;
+                    }
                 }
 
                 if(nk)
                 {
                     okp += ks;
-                    for(uint8_t* kk = okp + nk; kk > okp; ++l)
-                        swap(_high - *--kk, l);
+                    for(uint8_t* kk = okp + nk;;)
+                    {
+                        swap(_high - *--kk, l++);
+                        if(kk <= okp) break;
+                    }
                 }
             }
             
@@ -1121,6 +1127,9 @@ inline void qSort
          */
             g = l; 
             
+            // If we are not conserving 
+            // memory, unroll the
+            // loop for a tiny boost.
             if constexpr (Block)
             {
                 E* u = k - (BlockSize >> 2U);
