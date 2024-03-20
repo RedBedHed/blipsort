@@ -1,6 +1,10 @@
 # *Branchless Lomuto in Pattern-Defeating Quicksort (Blipsort)*
  
-A highly-optimized, memory-conscious, Introsort variant that draws from PDQsort, Java, BlockQuicksort and Orson Peters' and Lukas Bergdoll's branchless Lomuto partitioning. Iterative version [Here](https://github.com/RedBedHed/blipsort_iterative).
+A highly-optimized, memory-conscious, Introsort variant that draws from PDQsort, Java, BlockQuicksort and Orson Peters' and Lukas Bergdoll's branchless Lomuto partitioning. 
+
+## Iterative version 
+
+[Here](https://github.com/RedBedHed/blipsort_iterative).
 
 ## Speed
 
