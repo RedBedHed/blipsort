@@ -2,9 +2,9 @@
  
 A highly-optimized, memory-conscious, Introsort variant that draws from PDQsort, Java, BlockQuicksort and Orson Peters' and Lukas Bergdoll's branchless Lomuto partitioning. 
 
-## Iterative version 
+## Iterative Version 
 
-[Here](https://github.com/RedBedHed/blipsort_iterative).
+[Here](https://github.com/RedBedHed/blipsort_iterative)
 
 ## Speed
 
