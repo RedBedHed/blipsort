@@ -57,7 +57,7 @@ Work is calculated as:
 ```
 
 ### Breaking Patterns
-Like PDQsort, if the partition is bad, Blipsort scrambles some elements to break up patterns.
+Like PDQsort, if the partition is bad, Blipsort scrambles some elements to break up patterns. Unlike pdqsort, blipsort does not introduce completely fresh pivot candidates.
 
 ### Rotation
 When all of the candidate pivots are strictly descending, it is very likely that the interval is descending as well. Lomuto partitioning slows significantly on descending data. Therefore, Blipsort neglects to sort descending candidates and instead swap-rotates the entire interval before partitioning.
