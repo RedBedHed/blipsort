@@ -627,11 +627,11 @@ inline void qSort
         // descending...
         // Insertion sort all five
         // candidate pivots in-place.
-        if((!cmp(*cl, *low)) | 
-           (!cmp(*sl, *cl))  |
-           (!cmp(*mid, *sl)) |
-           (!cmp(*sr, *mid)) |
-           (!cmp(*cr, *sr))  |
+        if((!cmp(*cl, *low)) || 
+           (!cmp(*sl, *cl))  ||
+           (!cmp(*mid, *sl)) ||
+           (!cmp(*sr, *mid)) ||
+           (!cmp(*cr, *sr))  ||
            (!cmp(*high, *cr)))
         {
             
