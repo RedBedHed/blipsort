@@ -434,8 +434,8 @@ constexpr void scramble
 }
 
 /**
- * Aligns the given pointer on 64-bit 
- * boundary.
+ * Aligns the given pointer on 64-byte 
+ * cachline.
  * 
  * @tparam E the element type
  * @param p pointer to memory to align
